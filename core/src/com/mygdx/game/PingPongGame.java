@@ -14,6 +14,8 @@ public class PingPongGame extends ApplicationAdapter {
 	Paddle paddle;
 	int score;
 	BitmapFont font;
+	final int CATCH_BALL_BONUS = 100;
+	int livesCount = 3;
 
 	@Override
 	public void create () {
@@ -37,9 +39,17 @@ public class PingPongGame extends ApplicationAdapter {
 
 		collideBall();
 
+		// lose ball
 		if(ball.y + ball.texture.getHeight() < 0){
 			ball.restart(paddle);
+			soundManager.loseBallSound.play();
+			livesCount--;
+			// Introduce game over logo and present logo;
+			// project logo to center of screen.
+			// no new classes.
 		}
+
+
 
 		// drawing
 		Gdx.gl.glClearColor(1, 0, 0, 1);
@@ -47,7 +57,7 @@ public class PingPongGame extends ApplicationAdapter {
 		batch.begin();
 		ball.draw(batch);
 		paddle.draw(batch);
-		font.draw(batch, "Score: " + score, 0, Gdx.graphics.getHeight());
+		font.draw(batch, "Score: " + score + "  Lives: " + livesCount, 0, Gdx.graphics.getHeight());
 
 
 		batch.end();
@@ -85,7 +95,8 @@ public class PingPongGame extends ApplicationAdapter {
 			if(ball.y < paddle.y + paddle.texture.getHeight()){
 				soundManager.playRandomBounceSound();
 				ball.velocityY = -ball.velocityY;
-				score += 100;
+
+				score += Math.abs(ball.velocityX) * CATCH_BALL_BONUS;
 			}
 		}
 

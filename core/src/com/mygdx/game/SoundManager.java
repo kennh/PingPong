@@ -7,11 +7,13 @@ import java.util.Random;
 
 public class SoundManager {
     private Sound bounceSound1, bounceSound2, bounceSound3;
+    public Sound loseBallSound;
 
     public SoundManager() {
         bounceSound1 = Gdx.audio.newSound(Gdx.files.internal("bounce1.ogg"));
         bounceSound2 = Gdx.audio.newSound(Gdx.files.internal("bounce2.ogg"));
         bounceSound3 = Gdx.audio.newSound(Gdx.files.internal("bounce3.ogg"));
+        loseBallSound = Gdx.audio.newSound(Gdx.files.internal("lose_ball.ogg"));
 
     }
 
@@ -31,5 +33,6 @@ public class SoundManager {
         bounceSound1.dispose();
         bounceSound2.dispose();
         bounceSound3.dispose();
+        loseBallSound.dispose();
     }
 }
