@@ -84,6 +84,7 @@ public class PingPongGame extends ApplicationAdapter {
 			soundManager.playRandomBounceSound();
 			ball.velocityY = -ball.velocityY;
 		}
+		
 		// The ball bounces off the left wall soon
 		if(ball.x <= 0){
 			soundManager.playRandomBounceSound();
@@ -109,6 +110,7 @@ public class PingPongGame extends ApplicationAdapter {
 				}
 			}
 		}
+
 		//The ball will bounce off right side of paddle
 		if(ball.x > paddle.x + paddle.texture.getWidth() - ball.texture.getWidth() / 2 - 1
 				&& ball.x < paddle.x + paddle.texture.getWidth()){
@@ -120,11 +122,5 @@ public class PingPongGame extends ApplicationAdapter {
 			}
 		}
 	}
-
-
-
-
-
-
 
 }
