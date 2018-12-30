@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class PingPongGame extends ApplicationAdapter {
+	Texture gameOverTexture;
 	SpriteBatch batch;
 	SoundManager soundManager;
 	Ball ball;
@@ -15,7 +16,10 @@ public class PingPongGame extends ApplicationAdapter {
 	int score;
 	BitmapFont font;
 	final int CATCH_BALL_BONUS = 100;
-	int livesCount = 3;
+	int livesCount = 1;
+	boolean isGameOver = false;
+	CloseBtn closeBtn;
+
 
 	@Override
 	public void create () {
@@ -26,30 +30,37 @@ public class PingPongGame extends ApplicationAdapter {
 		paddle = new Paddle();
 		paddle.x = (Gdx.graphics.getWidth() - paddle.texture.getWidth()) / 2;
 		ball.restart(paddle);
+		gameOverTexture = new Texture("game_over_logo.jpg");
+		closeBtn = new CloseBtn();
 		soundManager = new SoundManager();
 	}
 
 	@Override
 	public void render () {
-		// Input
-		paddle.move();
 
-		// logic
-		ball.move(paddle);
+		if(! isGameOver){
+			// Input
+			paddle.move();
+
+			// logic
+			ball.move(paddle);
+		}
+
+
 
 		collideBall();
 
 		// lose ball
-		if(ball.y + ball.texture.getHeight() < 0){
+		if (ball.y + ball.texture.getHeight() < 0) {
 			ball.restart(paddle);
 			soundManager.loseBallSound.play();
 			livesCount--;
 			// Introduce game over logo and present logo;
 			// project logo to center of screen.
-			// no new classes.
+			if(livesCount == 0){
+				isGameOver = true;
+			}
 		}
-
-
 
 		// drawing
 		Gdx.gl.glClearColor(1, 0, 0, 1);
@@ -57,9 +68,13 @@ public class PingPongGame extends ApplicationAdapter {
 		batch.begin();
 		ball.draw(batch);
 		paddle.draw(batch);
+
+		if(isGameOver){
+			batch.draw(gameOverTexture,(Gdx.graphics.getWidth() - gameOverTexture.getWidth())/ 2,
+					(Gdx.graphics.getHeight() - gameOverTexture.getHeight()) / 2);
+			closeBtn.draw(batch);
+		}
 		font.draw(batch, "Score: " + score + "  Lives: " + livesCount, 0, Gdx.graphics.getHeight());
-
-
 		batch.end();
 	}
 
@@ -70,6 +85,8 @@ public class PingPongGame extends ApplicationAdapter {
 		paddle.dispose();
 		soundManager.disposeSound();
 		font.dispose();
+		gameOverTexture.dispose();  // dispose of the game_over_logo.
+		closeBtn.dispose();
 	}
 
 	private void collideBall() {
