@@ -16,9 +16,11 @@ public class PingPongGame extends ApplicationAdapter {
 	int score;
 	BitmapFont font;
 	final int CATCH_BALL_BONUS = 100;
-	int livesCount = 1;
+	final int INITIAL_LIVES_COUNT = 1;
+	int livesCount = INITIAL_LIVES_COUNT;
 	boolean isGameOver = false;
-	CloseBtn closeBtn;
+	Button closeBtn;
+	Button replayBtn;
 
 
 	@Override
@@ -28,15 +30,33 @@ public class PingPongGame extends ApplicationAdapter {
 		batch = new SpriteBatch();
 		ball = new Ball();
 		paddle = new Paddle();
-		paddle.x = (Gdx.graphics.getWidth() - paddle.texture.getWidth()) / 2;
+		paddle.center();
 		ball.restart(paddle);
 		gameOverTexture = new Texture("game_over_logo.jpg");
-		closeBtn = new CloseBtn();
+		closeBtn = new Button("close.png");
+		closeBtn.x = Gdx.graphics.getWidth() - closeBtn.texture.getWidth();
+		closeBtn.y = 10;
+		replayBtn = new Button("replay.png");
+		replayBtn.y = 10;
 		soundManager = new SoundManager();
 	}
 
 	@Override
 	public void render () {
+		if(isGameOver) {
+			if (closeBtn.isClicked()) {
+				System.exit(0);
+			}
+
+			if (replayBtn.isReleased()) {
+				score = 0;
+				livesCount = INITIAL_LIVES_COUNT;
+				isGameOver = false;
+				paddle.center();
+				ball.restart(paddle);
+				ball.velocityX = ball.velocityY = ball.INITIAL_VELOCITY;
+			}
+		}
 
 		if(! isGameOver){
 			// Input
@@ -46,8 +66,6 @@ public class PingPongGame extends ApplicationAdapter {
 			ball.move(paddle);
 		}
 
-
-
 		collideBall();
 
 		// lose ball
@@ -55,8 +73,7 @@ public class PingPongGame extends ApplicationAdapter {
 			ball.restart(paddle);
 			soundManager.loseBallSound.play();
 			livesCount--;
-			// Introduce game over logo and present logo;
-			// project logo to center of screen.
+
 			if(livesCount == 0){
 				isGameOver = true;
 			}
@@ -73,6 +90,7 @@ public class PingPongGame extends ApplicationAdapter {
 			batch.draw(gameOverTexture,(Gdx.graphics.getWidth() - gameOverTexture.getWidth())/ 2,
 					(Gdx.graphics.getHeight() - gameOverTexture.getHeight()) / 2);
 			closeBtn.draw(batch);
+			replayBtn.draw(batch);
 		}
 		font.draw(batch, "Score: " + score + "  Lives: " + livesCount, 0, Gdx.graphics.getHeight());
 		batch.end();
@@ -87,6 +105,7 @@ public class PingPongGame extends ApplicationAdapter {
 		font.dispose();
 		gameOverTexture.dispose();  // dispose of the game_over_logo.
 		closeBtn.dispose();
+		replayBtn.dispose();
 	}
 
 	private void collideBall() {

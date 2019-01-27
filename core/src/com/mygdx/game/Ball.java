@@ -6,10 +6,12 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 public class Ball {
     Texture texture;
     int x, y;
-    int velocityX = 10, velocityY = 10;
+    final int INITIAL_VELOCITY = 10;
+    int velocityX = INITIAL_VELOCITY, velocityY = INITIAL_VELOCITY;
     final int FRAMES_TO_WAIT_BEFORE_BALL_START = 80;
     int ballStartFrameCounter;
     int ballFlyFrameCounter;
+    final int FRAMES_TO_WAIT_BEFORE_SPEEDINGUP_BALL = 100;
 
     public Ball(){
         texture = new Texture("ball_small.png");
@@ -35,7 +37,7 @@ public class Ball {
     }
 
     private void speedUpIfNeeded() {
-        if(ballFlyFrameCounter % 100 == 0) {
+        if(ballFlyFrameCounter % FRAMES_TO_WAIT_BEFORE_SPEEDINGUP_BALL == 0) {
             if(velocityX >= 0){
                 velocityX++;
             } else {

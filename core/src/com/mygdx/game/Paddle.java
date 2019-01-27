@@ -34,6 +34,10 @@ public class Paddle {
         }
     }
 
+    public void center(){
+        x = (Gdx.graphics.getWidth() - texture.getWidth()) / 2;
+    }
+
     public void dispose(){ texture.dispose(); }
 }
 
